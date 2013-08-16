@@ -9,6 +9,40 @@ import (
   "regexp"
 )
 
+func ReadRecords(fileName string) (s [][]string, err error) {
+  file, err := os.Open(fileName)
+  if err != nil {
+    return nil, err
+  }
+  defer file.Close()
+
+  reader := csv.NewReader(file)
+  reader.TrailingComma = true
+
+  recordArray, err := reader.ReadAll()
+  if err != nil {
+    return nil, err
+  }
+  return recordArray, nil
+}
+
+func RemoveDuplicates(words []string) []string {
+  newWords := make([]string, len(words))
+  for _, word := range words {
+    contains := false
+    for _, w := range newWords {
+      if strings.EqualFold(w, word) {
+        contains = true
+        break
+      }
+    }
+    if !contains {
+      newWords = append(newWords, word)
+    }
+  }
+  return newWords
+}
+
 func WordFrequency(words []string) (s map[string] int) {
   wordCountMap := make(map[string] int)
   for _, word := range words {
