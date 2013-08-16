@@ -113,9 +113,24 @@ func inverseDocumentFrequency(fileName string) (m map[string] float64, err error
 }
 
 // Term Frequency-Inverse Document Frequency (TF-IDF)
-// func termFrequencyInverseDocumentFrequency() () {
+func termFrequencyInverseDocumentFrequency(fileName string) (m map[string] float64, err error) {
+  tfidfMap := make(map[string] float64)
 
-// }
+  tf, err := termFrequency(fileName, 0.0)
+  if err != nil {
+    return nil, err
+  }
+  
+  idf, err := inverseDocumentFrequency(fileName)
+  if err != nil {
+    return nil, err
+  }
+
+  for word, docFreq := range idf {
+    tfidfMap[word] = float64(tf[word]) * docFreq
+  }
+  return tfidfMap, nil
+}
 
 func main() {
   /*
@@ -125,11 +140,18 @@ func main() {
   } else {
     fmt.Println(tf)
   }
-  */
+
   idf, err := inverseDocumentFrequency("pocket.csv")
   if err != nil {
     fmt.Println(err)
   } else {
     fmt.Println(idf)
+  }
+  */
+  tfidfMap, err := termFrequencyInverseDocumentFrequency("pocket.csv")
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(tfidfMap)
   }
 }
