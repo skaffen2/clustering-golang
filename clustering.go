@@ -13,12 +13,7 @@ import (
 // 
 // Providing a threshold (1.0 >= x > 0.0) will return only the words
 // that appear in all the documents (x*100)% of the time
-func termFrequency(fileName string, threshold float64) (m map[string] int, err error) {
-  recordArray, err := utils.ReadRecords(fileName)
-  if err != nil {
-    return nil, err
-  }
-
+func termFrequency(recordArray [][]string, threshold float64) (m map[string] int, err error) {
   saveMap := make(map[string] map[string] int)
   for _, record := range recordArray {
     url := record[0]
@@ -69,11 +64,7 @@ func termFrequency(fileName string, threshold float64) (m map[string] int, err e
 }
 
 // Inverse Document Frequency
-func inverseDocumentFrequency(fileName string) (m map[string] float64, err error) {
-  recordArray, err := utils.ReadRecords(fileName)
-  if err != nil {
-    return nil, err
-  }
+func inverseDocumentFrequency(recordArray [][]string) (m map[string] float64, err error) {
   d := float64(len(recordArray))
   
   wordCountMap := make(map[string] int)
@@ -114,14 +105,19 @@ func inverseDocumentFrequency(fileName string) (m map[string] float64, err error
 
 // Term Frequency-Inverse Document Frequency (TF-IDF)
 func termFrequencyInverseDocumentFrequency(fileName string) (m map[string] float64, err error) {
+  recordArray, err := utils.ReadRecords(fileName)
+  if err != nil {
+    return nil, err
+  }
+
   tfidfMap := make(map[string] float64)
 
-  tf, err := termFrequency(fileName, 0.0)
+  tf, err := termFrequency(recordArray, 0.0)
   if err != nil {
     return nil, err
   }
   
-  idf, err := inverseDocumentFrequency(fileName)
+  idf, err := inverseDocumentFrequency(recordArray)
   if err != nil {
     return nil, err
   }
@@ -133,21 +129,6 @@ func termFrequencyInverseDocumentFrequency(fileName string) (m map[string] float
 }
 
 func main() {
-  /*
-  tf, err := termFrequency("pocket.csv", 0.2)
-  if err != nil {
-    fmt.Println(err)
-  } else {
-    fmt.Println(tf)
-  }
-
-  idf, err := inverseDocumentFrequency("pocket.csv")
-  if err != nil {
-    fmt.Println(err)
-  } else {
-    fmt.Println(idf)
-  }
-  */
   tfidfMap, err := termFrequencyInverseDocumentFrequency("pocket.csv")
   if err != nil {
     fmt.Println(err)
