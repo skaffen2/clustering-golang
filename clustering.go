@@ -9,6 +9,11 @@ import (
   "strings"
 )
 
+// Returns a map where the key is a word and the int is the number
+// of times that word appears in the set of documents
+// 
+// Providing a threshold (1.0 >= x > 0.0) will return only the words
+// that appear in all the documents (x*100)% of the time
 func termFrequency(fileName string, threshold float32) (m map[string] int, err error) {
   file, err := os.Open(fileName)
   if err != nil {

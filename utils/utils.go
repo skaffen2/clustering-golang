@@ -1,4 +1,5 @@
 // utils.go
+// Implements utilities for the primary clustering methods
 package utils
 
 import (
